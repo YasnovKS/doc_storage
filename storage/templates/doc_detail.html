@@ -1,8 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}{{ object.title }}{% endblock %}
 {% block content %}
-<div class="documents">
-    {{ object.title }}
-    <p>{{ object.content }}</p>
-</div>
+    <div class="documents">
+        {{ object.title }}
+        <p>{{ object.content }}</p>
+    </div>
+    <div class="versions">
+        {% if versions %}
+            {% for version in versions %}
+                <p>{{ version.content }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
 {% endblock %}
