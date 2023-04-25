@@ -7,6 +7,7 @@ from django.views.generic import CreateView, DetailView, ListView
 from docs.forms import PostForm
 from docs.models import Document
 from reversion.models import Version
+from . import messages
 
 
 class IndexView(ListView):
@@ -46,23 +47,24 @@ class CreateDocument(CreateView):
 
 @login_required
 def edit_document(request, pk):
-    obj = get_object_or_404(Document, pk=pk)
-    if obj.author != request.user:
-        return redirect('docs:doc_detail', pk=obj.id)
+    document = get_object_or_404(Document, pk=pk)
+    title, content = document.title, document.content
+    if document.author != request.user:
+        return redirect('docs:doc_detail', pk=document.id)
     form = PostForm(request.POST or None,
-                    instance=obj)
+                    instance=document)
     context = {
         'form': form,
         'is_edit': True,
     }
     if form.is_valid():
         with reversion.create_revision():
-            if (
-                obj.title != form.cleaned_data.get('title')
-                or obj.content != form.cleaned_data.get('content')
-            ):
-                obj = form.save(commit=True)
-                return redirect('docs:doc_detail', pk=obj.id)
+            if (title, content) == (form.cleaned_data.get('title'),
+                                    form.cleaned_data.get('content')
+                                    ):
+                return render(request, 'document_create.html', context)
+            form.save()
+            return redirect('docs:doc_detail', pk=document.id)
     return render(request, 'document_create.html', context)
 
 
@@ -75,6 +77,6 @@ def delete_document(request, pk):
     if obj.author != request.user:
         return redirect('docs:doc_detail', pk=obj.id)
     obj.delete()
-    revision.comment = 'Документ удален'
+    revision.comment = messages.DELETE_DOC
     revision.save()
     return redirect('docs:index')
