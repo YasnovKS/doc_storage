@@ -1,15 +1,22 @@
-{% block title %}Создать документ{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Новый документ{% endblock %}
 {% block content %}
     <div class="card-body">
         <form method="post" action="">
             {% csrf_token %}            
             {% for field in form %}
-                <small> {{ field.verbose_name }} </small>
+                <placeholder> {{ field.verbose_name }} </small>
                 <p>{{ field }}</p>
             {% endfor %}
-            <button type="submit" class="btn btn-primary">
-                Добавить
-            </button>
+            {% if is_edit %}
+                <button type="submit" class="btn btn-primary">
+                    Сохранить
+                </button>
+            {% else %}
+                <button type="submit" class="btn btn-primary">
+                    Создать
+                </button>
+            {% endif %}
         </form>
     </div>
 {% endblock %}

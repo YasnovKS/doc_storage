@@ -11,7 +11,10 @@ urlpatterns = [
         name='doc_detail'
     ),
     path(
-        'document/<pk>/edit/', views.EditDocument.as_view(),
+        'document/<pk>/edit/', views.edit_document,
         name='doc_edit'
     ),
+    path('document/<pk>/delete/', views.delete_document,
+         name='doc_delete',
+         ),
 ]
