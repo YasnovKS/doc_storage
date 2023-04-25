@@ -1,0 +1,15 @@
+{% block title %}Создать документ{% endblock %}
+{% block content %}
+    <div class="card-body">
+        <form method="post" action="">
+            {% csrf_token %}            
+            {% for field in form %}
+                <small> {{ field.verbose_name }} </small>
+                <p>{{ field }}</p>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">
+                Добавить
+            </button>
+        </form>
+    </div>
+{% endblock %}
