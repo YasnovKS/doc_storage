@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 from docs.models import Document
-from reversion.models import Revision
 
 User = get_user_model()
 
@@ -69,7 +68,7 @@ class TestDocsViews(TestCase):
             'content': 'Old content',
             'author': self.user
         }
-        created = self.client.post(reverse('docs:doc_create'), data=data)
+        created = self.client.post(reverse('docs:doc_create'), data=data)  # noqa
         docs = Document.objects.all()
         start_count = docs.count()
         first_doc = docs.first()

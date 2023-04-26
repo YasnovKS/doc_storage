@@ -24,8 +24,10 @@ class DocumentDetail(DetailView):
         context = self.get_context_data(object=self.object)
         versions = Version.objects.filter(object_id=pk)
         version_list = list()
-        for version in versions:
-            version_list.append(version.field_dict)
+        for version in versions[1::]:
+            version_dict = version.field_dict
+            version_dict['revision'] = version.revision
+            version_list.append(version_dict)
         context['versions'] = version_list
         return self.render_to_response(context)
 
@@ -48,6 +50,9 @@ class CreateDocument(CreateView):
 @login_required
 def edit_document(request, pk):
     document = get_object_or_404(Document, pk=pk)
+    version = Version.objects.filter(object_id=pk).first()
+    if version:
+        version = version.field_dict
     title, content = document.title, document.content
     if document.author != request.user:
         return redirect('docs:doc_detail', pk=document.id)
@@ -56,6 +61,7 @@ def edit_document(request, pk):
     context = {
         'form': form,
         'is_edit': True,
+        'version': version
     }
     if form.is_valid():
         with reversion.create_revision():

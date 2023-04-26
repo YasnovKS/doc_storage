@@ -1,0 +1,26 @@
+<div class="header">
+    <a href="{% url 'docs:index' %}">
+        <button class="header-btn">
+            Главная страница
+        </button>
+    </a>
+    <a href="{% url 'docs:doc_create' %}">
+        <button class="header-btn">
+            Новый документ
+        </button>
+    </a>
+    {% if request.user.is_authenticated %}
+        <span>{{ request.user.get_username }}</span>
+        <a href="/auth/logout/">
+            <button class="header-btn">
+                Выйти
+            </button>
+        </a>
+    {% else %}
+        <a href="/auth/login/">
+            <button class="header-btn">
+                Войти
+            </button>
+        </a>
+    {% endif %}
+</div>

@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block title %}Все документы{% endblock %}
 {% block content %}
-<div class="documents">
+<h1 class="main-title">Все документы</h1>
+<div class="document-list">
     {% if object_list %}
-        <ul>
-            {% for document in object_list %}
-                <li>{{ document.title }}</li>
-            {% endfor %}
-        </ul>
+        {% for document in object_list %}
+            <a class="doc-item" href="{% url 'docs:doc_detail' document.id %}"><span class="doc-item">{{ document.title }}</span></a>
+            <br>
+        {% endfor %}
     {% endif %}
 </div>
 {% endblock %}
