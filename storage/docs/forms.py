@@ -1,8 +1,9 @@
 from django import forms
+
 from .models import Document
 
 
-class PostForm(forms.ModelForm):
+class CreateForm(forms.ModelForm):
 
     class Meta:
         model = Document
@@ -17,3 +18,9 @@ class PostForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'text-field',
                                              'placeholder': 'Содержание'}),
         }
+
+
+class EditForm(CreateForm):
+
+    class Meta(CreateForm.Meta):
+        fields = ['title', 'content', 'for_deleting']

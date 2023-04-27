@@ -7,9 +7,13 @@
             <div class="doc-content">
                 {{ object.content }}
             </div>
+            {% if object.for_deleting %}
+                <div class="doc-content">
+                    <p>Документ помечен на удаление</p>
+                </div>
+            {% endif %}
             {% if object.author == request.user %}
                 <a href="{% url 'docs:doc_edit' object.id %}"><button class="edit-btn">Редактировать</button></a>
-                <a href="{% url 'docs:doc_delete' object.id %}"><button class="del-btn">Пометить на удаление</button></a>
             {% endif %}
         </div>
         <div class="versions">

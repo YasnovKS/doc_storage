@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
 {% block title %}Новый документ{% endblock %}
 {% block content %}
-    <h1>Создать документ</h1>
+    {% if is_edit %}
+        <h1>Редактировать документ</h1>
+    {% else %}
+        <h1>Создать документ</h1>
+    {% endif %}
     <div class="card-body">
         <form method="post" action="">
             {% csrf_token %}
             {% for field in form %}
-                <placeholder> {{ field.verbose_name }} </placeholder>
+                <span class="help-text"> {{ field.help_text }} </span>
                 <p>{{ field }}</p>
+                <br>
             {% endfor %}
             {% if is_edit %}
                 <button type="submit" class="submit-button">
