@@ -4,9 +4,10 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView
-from docs.forms import PostForm
+from docs.forms import CreateForm, EditForm
 from docs.models import Document
 from reversion.models import Version
+
 from . import messages
 
 
@@ -33,7 +34,7 @@ class DocumentDetail(DetailView):
 
 
 class CreateDocument(CreateView):
-    form_class = PostForm
+    form_class = CreateForm
     template_name = 'document_create.html'
 
     @method_decorator(login_required)
@@ -56,14 +57,17 @@ def edit_document(request, pk):
     title, content = document.title, document.content
     if document.author != request.user:
         return redirect('docs:doc_detail', pk=document.id)
-    form = PostForm(request.POST or None,
+    form = EditForm(request.POST or None,
                     instance=document)
     context = {
+        'object': document,
         'form': form,
         'is_edit': True,
         'version': version
     }
     if form.is_valid():
+        if form.cleaned_data.get('for_deleting'):
+            return delete_document(request, pk=pk)
         with reversion.create_revision():
             if (title, content) == (form.cleaned_data.get('title'),
                                     form.cleaned_data.get('content')
@@ -80,8 +84,6 @@ def delete_document(request, pk):
     obj = get_object_or_404(Document, pk=pk)
     version = Version.objects.filter(object_id=pk).first()
     revision = version.revision
-    if obj.author != request.user:
-        return redirect('docs:doc_detail', pk=obj.id)
     obj.delete()
     revision.comment = messages.DELETE_DOC
     revision.save()

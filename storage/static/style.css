@@ -95,12 +95,9 @@ header, footer, body {
     display: none;
   }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
+  span.help-text {
+    font-family: Tahoma, sans-serif;
+    font-weight: bold;
   }
 
   .field {
@@ -151,13 +148,18 @@ header, footer, body {
     transition-duration: 0.3s;
   }
 
+  a.del {
+    text-decoration: none;
+  }
+
   .del-btn {
     background-color: white;
     font-family: Tahoma, sans-serif;
     font-size: 15px;
     margin-top: 2vh;
-    width:10vw;
+    width: 10vw;
     height: 4vh;
+    border: 2px solid;
     border-radius: 10px;
   }
 

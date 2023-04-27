@@ -66,15 +66,24 @@ class TestDocsViews(TestCase):
         data = {
             'title': 'Old document',
             'content': 'Old content',
-            'author': self.user
+            'author': self.user,
         }
-        created = self.client.post(reverse('docs:doc_create'), data=data)  # noqa
+        self.client.post(reverse('docs:doc_create'), data=data)
+        del_data = {
+            'title': 'Old document',
+            'content': 'Old content',
+            'author': self.user,
+            'for_deleting': True,
+        }
         docs = Document.objects.all()
         start_count = docs.count()
         first_doc = docs.first()
-        self.client.get(reverse('docs:doc_delete',
-                                kwargs={'pk': first_doc.id}
-                                )
-                        )
+        self.client.post(
+            reverse(
+                'docs:doc_edit', kwargs={'pk': first_doc.id}
+            ),
+            del_data,
+            follow=True,
+        )
         end_count = Document.objects.all().count()
         self.assertEqual(start_count - 1, end_count)
