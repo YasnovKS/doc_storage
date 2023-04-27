@@ -14,7 +14,4 @@ urlpatterns = [
         'document/<pk>/edit/', views.edit_document,
         name='doc_edit'
     ),
-    path('document/<pk>/delete/', views.delete_document,
-         name='doc_delete',
-         ),
 ]
